@@ -1,2 +1,6 @@
 /.vscode
 /build
+/pdfs
+*.exe
+*.exp
+*.lib
