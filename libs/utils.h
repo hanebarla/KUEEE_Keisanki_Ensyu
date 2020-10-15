@@ -2,6 +2,7 @@
 #define UTILS_H
 #include <iostream>
 #include <vector>
+#include "matrix.h"
 
 template <typename T>
 std::ostream& operator<<(std::ostream& stream, const std::vector<T> v) {
@@ -9,7 +10,7 @@ std::ostream& operator<<(std::ostream& stream, const std::vector<T> v) {
     for (const auto& e : v) {
         stream << e << ", ";
     };
-    stream << "], type: " << typeid(v[0]).name();
+    stream << "], Type: " << typeid(v[0]).name();
     return stream;
 }
 
