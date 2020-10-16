@@ -6,11 +6,11 @@
 #include "libs\matrix.h"
 
 int main() {
-    Matrix<double> x(100, 100);
-    Matrix<double> f(100, 100);
+    Matrix<double> x(11, 3);
 
-    auto a = multiply(f, x);
-    std::cout<< a.value[1] << std::endl;
+    std::cout<< x << std::endl;
+    x.T();
+    std::cout << x << std::endl;
 
     return 0;
 }

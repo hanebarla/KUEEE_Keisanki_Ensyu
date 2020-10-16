@@ -3,18 +3,18 @@
 #include <iostream>
 #include <vector>
 
-template <typename T>
+template <typename Ty>
 class Matrix {
    public:
     int row;
     int colum;
-    std::vector<std::vector<T>> value;
+    std::vector<std::vector<Ty>> value;
 
     Matrix(int _row, int _colum) {
         row = _row;
         colum = _colum;
         for (int i = 0; i < row; i++) {
-            std::vector<T> tmpv;
+            std::vector<Ty> tmpv;
             for (int j = 0; j < colum; j++) {
                 tmpv.push_back(0);
             }
@@ -33,11 +33,22 @@ class Matrix {
         int tmp = row;
         row = colum;
         colum = tmp;
+
+        std::vector<std::vector<Ty>>TM;
+        for(int i=0; i<row; i++){
+            std::vector<Ty>TMtemp;
+            for(int j=0; j<colum; j++){
+                TMtemp.push_back(value[j][i]);
+            }
+            TM.push_back(TMtemp);
+        }
+
+        value = TM;
     }
 };
 
-template <typename T>
-Matrix<T>multiply(Matrix<T> &F, Matrix<T> &xv){
+template <typename Ty>
+Matrix<Ty>multiply(Matrix<Ty> &F, Matrix<Ty> &xv){
     auto FM = F.value;
     auto xvm = xv.value;
 
@@ -46,7 +57,7 @@ Matrix<T>multiply(Matrix<T> &F, Matrix<T> &xv){
         return Matrix<double>(0,0);
     }
     else{
-        Matrix<T> Ans(F.row, xv.colum);
+        Matrix<Ty> Ans(F.row, xv.colum);
         for(int k = 0; k<F.row; k++){
             for(int i=0; i<xv.colum; i++){
                 for(int j=0; j<xv.row; j++){
