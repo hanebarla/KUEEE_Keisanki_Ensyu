@@ -6,11 +6,8 @@
 #include "libs\matrix.h"
 
 int main() {
-    Matrix<double> x(11, 3);
-
-    std::cout<< x << std::endl;
-    x.T();
-    std::cout << x << std::endl;
+    auto E = Identity<float>(5);
+    std::cout << E << std::endl;
 
     return 0;
 }

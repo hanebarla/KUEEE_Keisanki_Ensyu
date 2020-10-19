@@ -24,6 +24,10 @@ class Matrix {
 
     ~Matrix() {};
 
+    std::vector<Ty>& operator[](int n){
+        return value[n];
+    }
+
     std::vector<int> size(){
         std::vector<int> size = {row, colum};
         return size;
@@ -68,6 +72,16 @@ Matrix<Ty>multiply(Matrix<Ty> &F, Matrix<Ty> &xv){
 
         return Ans;
     }
+}
+
+template <typename Ty>
+Matrix<Ty> Identity(int n){
+    Matrix<Ty> E(n, n);
+    for(int i=0; i<n; i++){
+        E[i][i] = 1.0;
+    }
+
+    return E;
 }
 
 #endif
