@@ -4,11 +4,13 @@
 #include <cmath>
 #include <iostream>
 #include <vector>
+#include <iomanip>
 
 #include "libs\utils.h"
 
 #define REPEAT 30
 
+// f(x)
 double func(double x) {
     double tmp = 0.0;
     tmp += pow(x, 5);
@@ -22,7 +24,8 @@ double func(double x) {
 }
 
 int main() {
-    double x = -1.0;
+    // initialize
+    double x = -1.0;  // x(step 0)
     double xp = 0.0;
     double fx = 0.0;
     double xp_ep = 0.0;
@@ -31,6 +34,7 @@ int main() {
     std::vector<double> divAll;
     divAll.push_back(x);
 
+    // Repeat to get answer
     for (int i = 0; i < REPEAT; i++) {
         fx = func(x);
         xp_ep = func(x + 1e-7);
@@ -40,15 +44,15 @@ int main() {
         divAll.push_back(xp);
 
         if (fabs(x - xp) < 1e-15) {
-            continue;
-            // break;  グラフ描画のための数合わせ
+            break;
         }
 
         x = xp;
     }
     std::cout << divAll << std::endl;
-    std::cout << "Answer: " << x << std::endl;
+    std::cout << "Answer: " << std::setprecision(20) << x << std::endl;
 
+    // create graph
     FILE* gp;
 
     gp = _popen("gnuplot", "w");
@@ -62,9 +66,18 @@ int main() {
     fprintf(gp, "set logscale y\n");
     fprintf(gp, "plot \"-\" with points pt 6 \n");
 
-    for (int i = 0; i < REPEAT; i++) {
-        fprintf(gp, "%d, %g\n", i, fabs(divAll[i] - x));
+    int si = divAll.size();
+    int count = 0;
+
+    for (int i = 0; i < si; i++) {
+        double diff = fabs(divAll[i] - x);
+        if(diff > 0){
+            count += 1;
+        }
+        fprintf(gp, "%d, %g\n", i, diff);
     }
+    std::cout << "Repeat Num: " << count << std::endl;
+
     fprintf(gp, "e\n");
     fprintf(gp, "set output\n");
     fprintf(gp, "set terminal windows\n");
