@@ -1,6 +1,7 @@
 #ifndef UTILS_H
 #define UTILS_H
 #include <iostream>
+#include <iomanip>
 #include <vector>
 #include <cmath>
 
@@ -25,7 +26,7 @@ std::ostream& operator<<(std::ostream& stream, const Matrix<T> v) {
         }
         stream << "[ ";
         for (int j = 0; j < v.colum; j++) {
-            stream << v.value[i][j] << ", ";
+            stream << std::setw(10) << std::setprecision(2) << v.value[i][j] << ", ";
         }
         stream << "]";
     }
