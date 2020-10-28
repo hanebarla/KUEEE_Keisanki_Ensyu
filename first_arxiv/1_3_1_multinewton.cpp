@@ -5,18 +5,18 @@
 #include <vector>
 #include <iomanip>
 
-#include "utils"
+#include "..\libs\utils.h"
 
 #define REPEAT 100
 
 template <typename Ty = double>
 inline Ty fx1(Ty x1, Ty x2){
-    return 2*x1*x1 + 3*x2*x2 - 5;
+    return x1*x1 + x2*x2 - 2;
 }
 
 template <typename Ty = double>
 inline Ty fx2(Ty x1, Ty x2){
-    return 3*x1 -2*x2*x2 + 2;
+    return x1 -x2*x2;
 }
 
 template <typename Ty>
@@ -70,7 +70,7 @@ int main() {
     gp = _popen("gnuplot", "w");
     fprintf(gp, "unset key\n");
     fprintf(gp, "set terminal png\n");
-    fprintf(gp, "set output \'1_3_2_jacobi.png\'\n");
+    fprintf(gp, "set output \'1_3_1_jacobi.png\'\n");  // 保存ファイル名
     fprintf(gp, "set xrange[1e-15:100.0]\n");
     fprintf(gp, "set yrange[1e-15:10.0]\n");
     fprintf(gp, "set xlabel \"x1 Error\"\n");

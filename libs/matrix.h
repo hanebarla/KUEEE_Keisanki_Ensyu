@@ -38,7 +38,7 @@ class Matrix {
     // デストラクタ
     ~Matrix(){};
 
-    // 四則演算
+    // スカラーとの四則演算
     Matrix<Ty>& operator*=(Ty n) {
         for (int i = 0; i < row; i++) {
             for (int j = 0; j < colum; j++) {
@@ -234,18 +234,16 @@ template <typename Ty>
 std::vector<Ty> dot(Matrix<Ty>& F, const std::vector<Ty>& xv) {
     int xsize = xv.size();
 
-    if (F.colum != xsize) {
-        throw std::range_error("Don't mache the shapes.");
-    } else {
-        std::vector<Ty> Ans(F.row, 0);
-        for (int k = 0; k < F.row; k++) {
-            for (int j = 0; j < F.colum; j++) {
-                Ans[k] += F[k][j] * xv[j];
-            }
-        }
+    if (F.colum != xsize) throw std::range_error("Don't mache the shapes.");
 
-        return Ans;
+    std::vector<Ty> Ans(F.row, 0);
+    for (int k = 0; k < F.row; k++) {
+        for (int j = 0; j < F.colum; j++) {
+            Ans[k] += F[k][j] * xv[j];
+        }
     }
+
+    return Ans;
 }
 
 // 単位行列の代入
@@ -417,6 +415,7 @@ std::vector<Ty> MatEqu(const Matrix<Ty>& A, std::vector<Ty>& b) {
     return x;
 }
 
+// 逆行列を求める
 template <typename Ty>
 Matrix<Ty> Inv(const Matrix<Ty>& M) {
     int n = M.row;

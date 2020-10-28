@@ -6,7 +6,7 @@
 #include <vector>
 #include <iomanip>
 
-#include "libs\utils.h"
+#include "..\libs\utils.h"
 
 #define REPEAT 100
 
