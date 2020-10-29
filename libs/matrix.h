@@ -49,6 +49,7 @@ class Matrix {
         return *this;
     }
 
+    // スカラーとのブロードキャスト計算
     Matrix<Ty>& operator/=(Ty n) {
         for (int i = 0; i < row; i++) {
             for (int j = 0; j < colum; j++) {
@@ -79,8 +80,10 @@ class Matrix {
         return *this;
     }
 
+    // 配列のアクセス
     std::vector<Ty>& operator[](int n) { return value[n]; }
 
+    // シェイプの確認
     std::vector<int> size() {
         std::vector<int> size = {row, colum};
         return size;
@@ -257,6 +260,7 @@ Matrix<Ty> Identity(int n) {
     return E;
 }
 
+// 連続値の行列
 template <typename Ty>
 Matrix<Ty> Arrange(int n) {
     Matrix<Ty> Ar(1, n);

@@ -40,7 +40,7 @@ Matrix<Ty> Jac(const std::vector<Ty>& x){
 }
 
 int main() {
-    std::vector<double> x = {-0.5, 1.0};
+    std::vector<double> x = {sqrt(2.0), sqrt(2.0)};
     std::vector<double> x1_log;
     std::vector<double> x2_log;
     x1_log.push_back(x[0]);
@@ -71,8 +71,8 @@ int main() {
     fprintf(gp, "unset key\n");
     fprintf(gp, "set terminal png\n");
     fprintf(gp, "set output \'1_3_1_jacobi.png\'\n");  // 保存ファイル名
-    fprintf(gp, "set xrange[1e-15:100.0]\n");
-    fprintf(gp, "set yrange[1e-15:10.0]\n");
+    fprintf(gp, "set xrange[1e-25:100.0]\n");
+    fprintf(gp, "set yrange[1e-25:10.0]\n");
     fprintf(gp, "set xlabel \"x1 Error\"\n");
     fprintf(gp, "set ylabel \"x2 Error\"\n");
     for (int i = 0; i < si; i++) {
