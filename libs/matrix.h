@@ -1,10 +1,11 @@
 #ifndef MATRIX_H
 #define MATRIX_H
+#include <omp.h>
+
 #include <iomanip>
 #include <iostream>
 #include <utility>
 #include <vector>
-#include <omp.h>
 
 #include "utils.h"
 
@@ -183,6 +184,7 @@ Matrix<Ty> reshape(const Matrix<Ty>& M, int r, int c) {
 }
 
 // 行列とスカラーの四則演算
+// 行列 + スカラー (ブロードキャスト)
 template <typename Ty>
 Matrix<Ty> operator+(const Matrix<Ty>& Mo, Ty n) {
     auto M = Mo;
@@ -196,11 +198,13 @@ Matrix<Ty> operator+(const Matrix<Ty>& Mo, Ty n) {
     return Ans;
 }
 
+// スカラー + 行列 ( ブロードキャスト)
 template <typename Ty>
 Matrix<Ty> operator+(Ty n, const Matrix<Ty>& M) {
     return M + n;
 }
 
+// 行列 * スカラー (ブロードキャスト)
 template <typename Ty>
 Matrix<Ty> operator+(const Matrix<Ty>& Ao, const Matrix<Ty>& Bo) {
     auto A = Ao;
@@ -216,6 +220,7 @@ Matrix<Ty> operator+(const Matrix<Ty>& Ao, const Matrix<Ty>& Bo) {
     return Ans;
 }
 
+// 行列 * スカラー (ブロードキャスト)
 template <typename Ty>
 Matrix<Ty> operator*(const Matrix<Ty>& Mo, Ty n) {
     auto M = Mo;
@@ -229,6 +234,7 @@ Matrix<Ty> operator*(const Matrix<Ty>& Mo, Ty n) {
     return Ans;
 }
 
+// スカラー * 行列 (ブロードキャスト)
 template <typename Ty>
 Matrix<Ty> operator*(Ty n, const Matrix<Ty>& M) {
     return M * n;
@@ -250,6 +256,7 @@ Matrix<Ty> operator*(const Matrix<Ty>& Ao, const Matrix<Ty>& Bo) {
     return Ans;
 }
 
+// 行列 - スカラー (ブロードキャスト)
 template <typename Ty>
 Matrix<Ty> operator-(const Matrix<Ty>& Mo, Ty n) {
     auto M = Mo;
@@ -263,6 +270,7 @@ Matrix<Ty> operator-(const Matrix<Ty>& Mo, Ty n) {
     return Ans;
 }
 
+// スカラー - 行列 (ブロードキャスト)
 template <typename Ty>
 Matrix<Ty> operator-(Ty n, const Matrix<Ty>& Mo) {
     auto M = Mo;
@@ -276,6 +284,7 @@ Matrix<Ty> operator-(Ty n, const Matrix<Ty>& Mo) {
     return Ans;
 }
 
+// 行列 - 行列
 template <typename Ty>
 Matrix<Ty> operator-(const Matrix<Ty>& Ao, const Matrix<Ty>& Bo) {
     auto A = Ao;
@@ -291,6 +300,7 @@ Matrix<Ty> operator-(const Matrix<Ty>& Ao, const Matrix<Ty>& Bo) {
     return Ans;
 }
 
+// 行列 / スカラー (ブロードキャスト)
 template <typename Ty>
 Matrix<Ty> operator/(const Matrix<Ty>& Mo, Ty n) {
     auto M = Mo;
@@ -363,6 +373,43 @@ Matrix<Ty> Arrange(int n) {
     }
 
     return Ar;
+}
+
+// 残差ノルム
+template <typename Ty>
+Ty Resnorm(const Matrix<Ty>& Mo, const std::vector<Ty>& bo,
+           const std::vector<Ty>& xko) {
+    auto M = Mo;
+    auto b = bo;
+    auto xk = xko;
+    Ty resleng = 0;
+    Ty ansleng = 0;
+
+    std::vector<Ty> res = dot(M, xk) - b;
+    for (int i = 0; i < M.row; i++) {
+        resleng += res[i] * res[i];
+        ansleng += b[i] * b[i];
+    }
+
+    return Ty(resleng / ansleng);
+}
+// 残差ノルム(pair)
+template <typename Ty>
+Ty Resnorm(const std::pair<Matrix<Ty>, std::vector<Ty>>& pr,
+           const std::vector<Ty>& xko) {
+    auto M = pr.first;
+    auto b = pr.second;
+    auto xk = xko;
+    Ty resleng = 0;
+    Ty ansleng = 0;
+
+    std::vector<Ty> res = dot(M, xk) - b;
+    for (int i = 0; i < M.row; i++) {
+        resleng += res[i] * res[i];
+        ansleng += b[i] * b[i];
+    }
+
+    return Ty(resleng / ansleng);
 }
 
 // LU分解
@@ -594,13 +641,14 @@ std::pair<Matrix<Ty>, std::vector<Ty>> Forward_easure(const Matrix<Ty>& M,
 
     return FEpair;
 }
-
+// 前進消去(pair)
 template <typename Ty>
 std::pair<Matrix<Ty>, std::vector<Ty>> Forward_easure_pair(
     const std::pair<Matrix<Ty>, std::vector<Ty>> pr, std::vector<int>& pbidx) {
     return Forward_easure<Ty>(pr.first, pr.second, pbidx);
 }
 
+// 後退代入
 template <typename Ty>
 std::pair<Matrix<Ty>, std::vector<Ty>> Backward_subsitution(
     const Matrix<Ty>& M, const std::vector<Ty>& b, std::vector<int>& pbidx) {
@@ -627,7 +675,7 @@ std::pair<Matrix<Ty>, std::vector<Ty>> Backward_subsitution(
 
     return BSpair;
 }
-
+// 後退代入(pair)
 template <typename Ty>
 std::pair<Matrix<Ty>, std::vector<Ty>> Backward_subsitution_pair(
     const std::pair<Matrix<Ty>, std::vector<Ty>> pr, std::vector<int>& pbidx) {
@@ -670,16 +718,65 @@ std::vector<Ty> Jacobi_Step(const Matrix<Ty>& M, const std::vector<Ty>& b,
     auto Dinv = Inv(D);
     auto B = -1.0 * dot(Dinv, (L + U));
     std::vector<Ty> c = dot(Dinv, b);
-
     std::vector<Ty> Bxk = dot(B, xk);
 
     return Bxk + c;
 }
-
+// ヤコビ法(pair)
 template <typename Ty>
 std::vector<Ty> Jacobi_Step_pair(
     const std::pair<Matrix<Ty>, std::vector<Ty>> pr, std::vector<Ty>& xk) {
     return Jacobi_Step(pr.first, pr.second, xk);
 }
 
+// ガウスザイデル法
+template <typename Ty>
+std::vector<Ty> Gauss_Seidel_Step(const Matrix<Ty>& M, const std::vector<Ty>& b,
+                                  std::vector<Ty>& xk) {
+    std::vector<Ty> xkp = xk;
+    auto D = M;
+    auto L = M;
+    auto U = M;
+    DLUdecom(M, D, L, U);
+
+    auto DLinv = Inv(D + L);
+    auto B = -1.0 * dot(DLinv, U);
+    std::vector<Ty> c = dot(DLinv, b);
+    std::vector<Ty> Bxk = dot(B, xk);
+
+    return Bxk + c;
+}
+// ガウスザイデル法(pair)
+template <typename Ty>
+std::vector<Ty> Gauss_Seidel_Step_pair(
+    const std::pair<Matrix<Ty>, std::vector<Ty>> pr, std::vector<Ty>& xk) {
+    return Gauss_Seidel_Step(pr.first, pr.second, xk);
+}
+
+// SOR法
+template <typename Ty>
+std::vector<Ty> SOR_Step(const Matrix<Ty>& M, const std::vector<Ty>& b,
+                                  std::vector<Ty>& xk, const Ty omega) {
+    std::vector<Ty> xkp = xk;
+    auto D = M;
+    auto L = M;
+    auto U = M;
+    DLUdecom(M, D, L, U);
+
+    auto Momega = (D + omega * L);
+    auto Nomega = ((1.0 - omega) * D - omega * U);
+    auto Momegainv = Inv(Momega);
+    auto B = dot(Momegainv, Nomega);
+    std::vector<Ty> c = omega * dot(Momegainv, b);
+    std::vector<Ty> Bxk = dot(B, xk);
+
+    return Bxk + c;
+}
+// SOR法(pair)
+template <typename Ty>
+std::vector<Ty> SOR_Step_pair(
+    const std::pair<Matrix<Ty>, std::vector<Ty>> pr, std::vector<Ty>& xk,
+    const Ty omega) {
+    return SOR_Step(pr.first, pr.second, xk, omega);
+}
 #endif

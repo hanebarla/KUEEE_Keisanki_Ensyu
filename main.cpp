@@ -3,6 +3,7 @@
 #include "libs/matrix.h"
 
 #define RCSize 9
+#define omega 1.5
 
 template <typename Ty>
 std::pair<Matrix<Ty>, std::vector<Ty>> Initialize(){
@@ -26,8 +27,13 @@ std::pair<Matrix<Ty>, std::vector<Ty>> Initialize(){
 int main(){
     auto Ab = Initialize<double>();
     std::vector<double> x(RCSize, 0.0);
+    auto res = Resnorm(Ab, x);
+    std::cout << res << std::endl;
+
     for (int i = 0; i < 10000; i++){
-        x = Jacobi_Step_pair(Ab, x);
+        x = SOR_Step_pair(Ab, x, omega);
+        res = Resnorm(Ab, x);
+        // std::cout << res << std::endl;
     }
 
     std::cout << x << std::endl;
