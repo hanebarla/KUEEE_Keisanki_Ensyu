@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-#include "libs/matrix.h"
+#include "../libs/matrix.h"
 
 #define RCSize 9
 #define omega 1.5

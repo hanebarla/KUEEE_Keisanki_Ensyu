@@ -122,15 +122,25 @@ std::vector<long double> operator/(const std::vector<long double>& v, long doubl
     return v2;
 }
 
+// ベクターの内積
+template <typename T>
+T dot(const std::vector<T>& x, const std::vector<T>& y){
+    T sum = 0;
+    for (size_t i = 0; i < x.size(); i++){
+        sum += T(x[i] * y[i]);
+    }
+    return sum;
+}
+
 // ベクターのL2ノルム
 template <typename T>
-double L2norm(const std::vector<T>& x){
+T L2norm(const std::vector<T>& x){
     double sum = 0;
     for(size_t i=0; i<x.size(); i++){
         sum += double(x[i] * x[i]);
     }
 
-    return sqrtl(sum);
+    return T(sqrtl(sum));
 }
 
 // ベクターのL2ノルム(long double)

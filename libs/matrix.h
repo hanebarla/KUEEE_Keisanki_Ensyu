@@ -779,4 +779,48 @@ std::vector<Ty> SOR_Step_pair(
     const Ty omega) {
     return SOR_Step(pr.first, pr.second, xk, omega);
 }
+
+// 共役勾配法
+// 引数と返り値
+template <typename Ty>
+struct _CGReturn {
+    std::vector<Ty> x;
+    std::vector<Ty> r;
+    std::vector<Ty> p;
+    Ty rho;
+};
+// 共役勾配法
+template <typename Ty>
+_CGReturn<Ty> Conjugate_Gradient(const Matrix<Ty>& Mo, const _CGReturn<Ty>& cgin, int step){
+    Matrix<Ty> M = Mo;
+    std::vector<Ty> x = cgin.x;
+    std::vector<Ty> r = cgin.r;
+    std::vector<Ty> p_m = cgin.p;
+    Ty rho_m = cgin.rho;
+    std::vector<Ty> p = r;
+    Ty beta = 0;
+
+    _CGReturn<Ty> cgre = {x, r, p, 0.0};
+
+    Ty rho = dot(r, r);
+    if (step == 0){
+        p = r;
+    }else{
+        beta = rho / rho_m;
+        p = r + beta * p_m;
+    }
+
+    auto q = dot(M, p);
+    auto alpha = rho / (dot(p, q));
+    x = x + alpha * p;
+    r = r - alpha * q;
+
+    cgre.x = x;
+    cgre.r = r;
+    cgre.p = p;
+    cgre.rho = rho;
+
+    return cgre;
+}
+
 #endif

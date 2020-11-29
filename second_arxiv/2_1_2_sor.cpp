@@ -27,19 +27,16 @@ std::pair<Matrix<Ty>, std::vector<Ty>> Initialize(){
 int main(){
     auto Ab = Initialize<double>();
     std::vector<double> x(RCSize, 0.0);
-    std::vector<double> r = Ab.second - dot(Ab.first, x);
-    std::vector<double> p(RCSize);
-    _CGReturn<double> CG = {x, r, p, 0.0};
+    auto res = Resnorm(Ab, x);
+    std::cout << res << std::endl;
 
     for (int i = 0; i < 10000; i++){
-        CG = Conjugate_Gradient(Ab.first, CG, i);
-        if(CG.rho == 0.0){
-            std::cout << i << std::endl;
-            break;
-        }
+        x = SOR_Step_pair(Ab, x, omega);
+        res = Resnorm(Ab, x);
+        // std::cout << res << std::endl;
     }
 
-    std::cout << CG.x << std::endl;
+    std::cout << x << std::endl;
 
     return 0;
 }
