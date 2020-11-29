@@ -1,12 +1,17 @@
 #include <stdio.h>
 
-#include "libs/matrix.h"
+#include <algorithm>
+#include <cmath>
+#include <iostream>
+#include <vector>
+#include <iomanip>
 
-#define RCSize 9
+#include "../libs/matrix.h"
+#include "../libs/utils.h"
 
 template <typename Ty>
 std::pair<Matrix<Ty>, std::vector<Ty>> Initialize(){
-    Matrix<Ty> inita(RCSize, RCSize);
+    Matrix<Ty> inita(9, 9);
     inita.value = {{12,  1,  5,  1,  1,  2, -4,  1,  2},
                    { 1, 16, -1, -4, -5, -2,  1,  2,  3},
                    { 5, -1, 15, -5,  3,  1, -2,  1, -4},
@@ -25,12 +30,10 @@ std::pair<Matrix<Ty>, std::vector<Ty>> Initialize(){
 
 int main(){
     auto Ab = Initialize<double>();
-    std::vector<double> x(RCSize, 0.0);
-    for (int i = 0; i < 10000; i++){
-        x = Jacobi_Step_pair(Ab, x);
-    }
-
-    std::cout << x << std::endl;
+    std::vector<int> Exchangememo(Ab.first.row);
+    auto fe_Ab = Forward_easure_pair(Ab, Exchangememo);
+    auto bs_Ab = Backward_subsitution_pair(fe_Ab, Exchangememo);
+    std::cout << bs_Ab.second << std::endl;
 
     return 0;
 }
