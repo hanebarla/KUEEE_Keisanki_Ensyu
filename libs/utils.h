@@ -5,6 +5,20 @@
 #include <vector>
 #include <cmath>
 
+double machine_epsilon(){
+    double e = 1.0;
+    double e_m = 1.0;
+    while(true){
+        e_m /= 2.0;
+        if((1.0 + e_m) == 1.0){
+            break;
+        }
+        e = e_m;
+    }
+
+    return e;
+}
+
 // ベクターの出力
 template <typename T>
 std::ostream& operator<<(std::ostream& stream, const std::vector<T> v) {

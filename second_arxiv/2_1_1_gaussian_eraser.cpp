@@ -1,13 +1,6 @@
 #include <stdio.h>
 
-#include <algorithm>
-#include <cmath>
-#include <iostream>
-#include <vector>
-#include <iomanip>
-
 #include "../libs/matrix.h"
-#include "../libs/utils.h"
 
 template <typename Ty>
 std::pair<Matrix<Ty>, std::vector<Ty>> Initialize(){
@@ -33,7 +26,11 @@ int main(){
     std::vector<int> Exchangememo(Ab.first.row);
     auto fe_Ab = Forward_easure_pair(Ab, Exchangememo);
     auto bs_Ab = Backward_subsitution_pair(fe_Ab, Exchangememo);
-    std::cout << bs_Ab.second << std::endl;
+    std::cout << "x_idx: " << Exchangememo << std::endl;
+    std::cout << "    x: " << bs_Ab.second << std::endl;
+    auto resno = Resnorm(Ab, bs_Ab.second);
+    std::cout << "Res Norm: " << resno << std::endl;
+    std::cout << "ME: " << machine_epsilon() << std::endl;
 
     return 0;
 }

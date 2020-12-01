@@ -4,7 +4,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../libs/utils.h"
+#include "../libs/matrix.h"
 
 #define Epochs 30
 

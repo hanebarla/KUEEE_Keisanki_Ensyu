@@ -6,7 +6,7 @@
 #include <vector>
 #include <iomanip>
 
-#include "..\libs\utils.h"
+#include "..\libs\matrix.h"
 
 #define REPEAT 30
 

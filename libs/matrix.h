@@ -409,7 +409,7 @@ Ty Resnorm(const std::pair<Matrix<Ty>, std::vector<Ty>>& pr,
         ansleng += b[i] * b[i];
     }
 
-    return Ty(resleng / ansleng);
+    return Ty(sqrt(resleng) / sqrt(ansleng));
 }
 
 // LU分解
