@@ -25,6 +25,7 @@ std::pair<Matrix<Ty>, std::vector<Ty>> Initialize(){
 }
 
 int main(){
+    int count = 0;
     auto Ab = Initialize<double>();
     std::vector<double> x(RCSize, 0.0);
     std::vector<double> r = Ab.second - dot(Ab.first, x);
@@ -35,15 +36,16 @@ int main(){
     res_memo.push_back(res);
 
     for (int i = 0; i < 10000; i++){
+        count++;
         CG = Conjugate_Gradient(Ab.first, CG, i);
         res = Resnorm(Ab, CG.x);
         res_memo.push_back(res);
         if(CG.rho == 0.0 || res < 1e-10){
-            std::cout << i << std::endl;
             break;
         }
     }
 
+    std::cout << "Count: " << count << std::endl;
     std::cout << CG.x << std::endl;
 
     // create graph
@@ -61,13 +63,10 @@ int main(){
     fprintf(gp, "plot \"-\" with points pt 6 \n");
 
     int si = res_memo.size();
-    int count = 0;
 
     for (int i = 0; i < si; i++) {
         fprintf(gp, "%d, %g\n", i, res_memo[i]);
-        count++;
     }
-    std::cout << "Repeat Num: " << count << std::endl;
 
     fprintf(gp, "e\n");
     fprintf(gp, "set output\n");

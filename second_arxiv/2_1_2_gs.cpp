@@ -54,9 +54,10 @@ int main(){
         }
     }
 
-    std::cout << "Count: " << count << std::endl;
-    std::cout <<   "res: " << res << std::endl;
-    std::cout << "    x: " << x << std::endl;
+    std::cout << " Count: " << count << std::endl;
+    std::cout << "L2Norm: " << l2norm << std::endl;
+    std::cout << "   res: " << res << std::endl;
+    std::cout << "     x: " << x << std::endl;
 
         // create graph
     FILE* gp;

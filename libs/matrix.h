@@ -716,7 +716,7 @@ std::vector<Ty> Jacobi_Step(const Matrix<Ty>& M, const std::vector<Ty>& b,
     DLUdecom(M, D, L, U);
 
     auto Dinv = Inv(D);
-    auto B = -1.0 * dot(Dinv, (L + U));
+    auto B = Ty(-1) * dot(Dinv, (L + U));
     std::vector<Ty> c = dot(Dinv, b);
     std::vector<Ty> Bxk = dot(B, xk);
 
@@ -740,7 +740,7 @@ std::vector<Ty> Gauss_Seidel_Step(const Matrix<Ty>& M, const std::vector<Ty>& b,
     DLUdecom(M, D, L, U);
 
     auto DLinv = Inv(D + L);
-    auto B = -1.0 * dot(DLinv, U);
+    auto B = Ty(-1.0) * dot(DLinv, U);
     std::vector<Ty> c = dot(DLinv, b);
     std::vector<Ty> Bxk = dot(B, xk);
 
@@ -764,7 +764,7 @@ std::vector<Ty> SOR_Step(const Matrix<Ty>& M, const std::vector<Ty>& b,
     DLUdecom(M, D, L, U);
 
     auto Momega = (D + omega * L);
-    auto Nomega = ((1.0 - omega) * D - omega * U);
+    auto Nomega = (Ty(1.0 - omega) * D - omega * U);
     auto Momegainv = Inv(Momega);
     auto B = dot(Momegainv, Nomega);
     std::vector<Ty> c = omega * dot(Momegainv, b);

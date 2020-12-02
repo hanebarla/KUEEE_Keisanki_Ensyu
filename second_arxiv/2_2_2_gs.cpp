@@ -3,7 +3,7 @@
 #include "../libs/matrix.h"
 
 #define RCSize 9
-#define REPEAT 5500
+#define REPEAT 10000
 
 template <typename Ty>
 std::pair<Matrix<Ty>, std::vector<Ty>> Initialize(){
@@ -26,11 +26,11 @@ std::pair<Matrix<Ty>, std::vector<Ty>> Initialize(){
 
 int main(){
     int count = 0;
-    auto Ab = Initialize<double>();
-    std::vector<double> x(RCSize, 0.0);
-    std::vector<double> ans(RCSize, 1.0);
-    std::vector<double> res_memo = {};
-    std::vector<double> ans_memo = {};
+    auto Ab = Initialize<float>();
+    std::vector<float> x(RCSize, 0.0);
+    std::vector<float> ans(RCSize, 1.0);
+    std::vector<float> res_memo = {};
+    std::vector<float> ans_memo = {};
 
     auto res = Resnorm(Ab, x);
     auto l2norm = L2norm(x - ans);
@@ -40,7 +40,8 @@ int main(){
 
     for (int i = 0; i < 10000; i++){
         count++;
-        x = Jacobi_Step_pair(Ab, x);
+
+        x = Gauss_Seidel_Step_pair(Ab, x);
 
         res = Resnorm(Ab, x);
         l2norm = L2norm(x - ans);
@@ -58,13 +59,13 @@ int main(){
     std::cout << "   res: " << res << std::endl;
     std::cout << "     x: " << x << std::endl;
 
-    // create graph
+        // create graph
     FILE* gp;
 
     gp = _popen("gnuplot", "w");
     fprintf(gp, "unset key\n");
     fprintf(gp, "set terminal png\n");
-    fprintf(gp, "set output \'2_1_2_jacobi.png\'\n");
+    fprintf(gp, "set output \'2_2_2_gs.png\'\n");
     fprintf(gp, "set xrange[0:%d]\n", REPEAT);
     fprintf(gp, "set yrange[1e-15:%lf]\n", 10.0);
     fprintf(gp, "set xlabel \"Time\"\n");
@@ -73,13 +74,15 @@ int main(){
     fprintf(gp, "plot \"-\" with points pt 6 \n");
 
     int si = res_memo.size();
+
     for (int i = 0; i < si; i++) {
         fprintf(gp, "%d, %g\n", i, res_memo[i]);
     }
 
+
     fprintf(gp, "e\n");
     fprintf(gp, "set output\n");
-    fprintf(gp, "set output \'2_1_3_jacobi.png\'\n");
+    fprintf(gp, "set output \'2_2_3_gs.png\'\n");
     fprintf(gp, "plot \"-\" with points pt 6 \n");
 
     si = ans_memo.size();
@@ -90,7 +93,6 @@ int main(){
     fprintf(gp, "e\n");
     fprintf(gp, "set output\n");
     fprintf(gp, "set terminal windows\n");
-
     fflush(gp);
     _pclose(gp);
 
