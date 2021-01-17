@@ -5,7 +5,6 @@
 #include <iomanip>
 #include <iostream>
 #include <utility>
-#include <vector>
 
 #include "utils.h"
 
@@ -391,7 +390,7 @@ Ty Resnorm(const Matrix<Ty>& Mo, const std::vector<Ty>& bo,
         ansleng += b[i] * b[i];
     }
 
-    return Ty(resleng / ansleng);
+    return Ty(sqrtl(resleng / ansleng));
 }
 // 残差ノルム(pair)
 template <typename Ty>

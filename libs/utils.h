@@ -4,6 +4,7 @@
 #include <iomanip>
 #include <vector>
 #include <cmath>
+#include <numeric>
 
 double machine_epsilon(){
     double e = 1.0;
@@ -144,6 +145,19 @@ T dot(const std::vector<T>& x, const std::vector<T>& y){
         sum += T(x[i] * y[i]);
     }
     return sum;
+}
+
+// ベクター同士の外積
+template <typename T>
+std::vector<T> cross(const std::vector<T>& x, const std::vector<T>& y){
+    if (int(x.size()) != 3) throw std::range_error("Not 3-Dimention");
+
+    std::vector<T> ans(3, 0);
+    ans[0] = x[1] * y [2] - x[2] * y[1];
+    ans[1] = x[2] * y[0] - x[0] * y[2];
+    ans[2] = x[0] * y[1] - x[1] * y[0];
+
+    return ans;
 }
 
 // ベクターのL2ノルム
