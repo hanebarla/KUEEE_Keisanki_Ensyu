@@ -182,6 +182,8 @@ Matrix<Ty> reshape(const Matrix<Ty>& M, int r, int c) {
     return R;
 }
 
+// 回転 今回はvectorでしか使わないからパス
+
 // 行列とスカラーの四則演算
 // 行列 + スカラー (ブロードキャスト)
 template <typename Ty>

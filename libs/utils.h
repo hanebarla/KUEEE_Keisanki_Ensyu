@@ -5,6 +5,7 @@
 #include <vector>
 #include <cmath>
 #include <numeric>
+#include <algorithm>
 
 double machine_epsilon(){
     double e = 1.0;
@@ -179,6 +180,37 @@ long double L2norm(const std::vector<long double>& x){
     }
 
     return sqrtl(sum);
+}
+
+// ベクターの回転
+template <typename T>
+std::vector<T> roll(const std::vector<T>& x, int ro=0, T* constance=nullptr){
+    std::vector<T> rolled = x;
+
+    if(abs(ro) > int(x.size())) throw std::range_error("range error");
+
+    if(ro > 0){
+        std::rotate(rolled.begin(), rolled.begin()+ro, rolled.end());
+
+        if(constance != nullptr){
+            for(int i=0; i<ro; i++){
+                rolled[i] = *constance;
+            }
+        }
+    }
+    else if(ro < 0){
+        int vleng = int(rolled.size());
+
+        std::rotate(rolled.begin(), rolled.begin()+(vleng + ro), rolled.end());
+
+        if(constance != nullptr){
+            for(int i=vleng-1; i>vleng-ro; i++){
+                rolled[i] = *constance;
+            }
+        }
+    }
+
+    return rolled;
 }
 
 #endif
